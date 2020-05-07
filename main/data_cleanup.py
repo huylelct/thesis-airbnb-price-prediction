@@ -66,6 +66,14 @@ data = pd.DataFrame.drop(data, columns=[
     'cleaning_fee',
     'first_review',
     'last_review',
+    'host_total_listings_count',
+    'review_scores_accuracy',
+    'review_scores_cleanliness',
+    'review_scores_checkin',
+    'review_scores_communication',
+    'review_scores_location',
+    'review_scores_value',
+    'calculated_host_listings_count_entire_homes',
     # review process fields
     'amenities'
 ])
@@ -118,32 +126,33 @@ data["is_business_travel_ready"] = data["is_business_travel_ready"].apply(clean_
 data["require_guest_profile_picture"] = data["require_guest_profile_picture"].apply(clean_boolean_value)
 data["require_guest_phone_verification"] = data["require_guest_phone_verification"].apply(clean_boolean_value)
 
-host_verification_set = set()
-
-
-def collect_host_verifications(entry):
-    entry_list = entry.replace("[", "").replace("]", "").replace("'", "").replace('"', "").replace(" ", "").split(',')
-    for verification in entry_list:
-        if verification != "" and verification != 'None':
-            host_verification_set.add(verification + "_verification")
-
-
-data['host_verifications'].apply(collect_host_verifications)
-
-
-def generic_verification(entry, v):
-    entry_list = str(entry).replace("[", "").replace("]", "").replace("'", "").replace('"', "").replace(" ", "").split(
-        ',')
-    for verification in entry_list:
-        if verification + "_verification" == v:
-            return 1
-    return 0
-
-
-for v in host_verification_set:
-    data.insert(len(list(data)), v, 0)
-    data[v] = data['host_verifications'].apply(lambda x: generic_verification(x, v))
-
+# Not useful in feature selection
+# host_verification_set = set()
+#
+#
+# def collect_host_verifications(entry):
+#     entry_list = entry.replace("[", "").replace("]", "").replace("'", "").replace('"', "").replace(" ", "").split(',')
+#     for verification in entry_list:
+#         if verification != "" and verification != 'None':
+#             host_verification_set.add(verification + "_verification")
+#
+#
+# data['host_verifications'].apply(collect_host_verifications)
+#
+#
+# def generic_verification(entry, v):
+#     entry_list = str(entry).replace("[", "").replace("]", "").replace("'", "").replace('"', "").replace(" ", "").split(
+#         ',')
+#     for verification in entry_list:
+#         if verification + "_verification" == v:
+#             return 1
+#     return 0
+#
+#
+# for v in host_verification_set:
+#     data.insert(len(list(data)), v, 0)
+#     data[v] = data['host_verifications'].apply(lambda x: generic_verification(x, v))
+#
 data = pd.DataFrame.drop(data, columns=['host_verifications'])
 
 property_type_set = set()
@@ -239,21 +248,20 @@ def fill_nan_with_zeros(entry):
 
 
 data["host_listings_count"] = data["host_listings_count"].apply(fill_nan_with_zeros)
-data["host_total_listings_count"] = data["host_total_listings_count"].apply(fill_nan_with_zeros)
+# data["host_total_listings_count"] = data["host_total_listings_count"].apply(fill_nan_with_zeros)
 data["bathrooms"] = data["bathrooms"].apply(fill_nan_with_zeros)
 data["bedrooms"] = data["bedrooms"].apply(fill_nan_with_zeros)
 data["beds"] = data["beds"].apply(fill_nan_with_zeros)
 data["reviews_per_month"] = data["reviews_per_month"].apply(fill_nan_with_zeros)
 
-
 # review to choose suitable value
 data["review_scores_rating"] = data["review_scores_rating"].apply(fill_nan_with_zeros)
-data["review_scores_accuracy"] = data["review_scores_accuracy"].apply(fill_nan_with_zeros)
-data["review_scores_cleanliness"] = data["review_scores_cleanliness"].apply(fill_nan_with_zeros)
-data["review_scores_checkin"] = data["review_scores_checkin"].apply(fill_nan_with_zeros)
-data["review_scores_communication"] = data["review_scores_communication"].apply(fill_nan_with_zeros)
-data["review_scores_location"] = data["review_scores_location"].apply(fill_nan_with_zeros)
-data["review_scores_value"] = data["review_scores_value"].apply(fill_nan_with_zeros)
+# data["review_scores_accuracy"] = data["review_scores_accuracy"].apply(fill_nan_with_zeros)
+# data["review_scores_cleanliness"] = data["review_scores_cleanliness"].apply(fill_nan_with_zeros)
+# data["review_scores_checkin"] = data["review_scores_checkin"].apply(fill_nan_with_zeros)
+# data["review_scores_communication"] = data["review_scores_communication"].apply(fill_nan_with_zeros)
+# data["review_scores_location"] = data["review_scores_location"].apply(fill_nan_with_zeros)
+# data["review_scores_value"] = data["review_scores_value"].apply(fill_nan_with_zeros)
 
 
 print(len(data.columns))

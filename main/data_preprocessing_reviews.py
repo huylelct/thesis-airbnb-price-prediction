@@ -17,6 +17,7 @@ def normalize(x):
 def split(data, val_frac=0.10, test_frac=0.10):
     x = data.loc[:, data.columns != 'price']
     x = x.loc[:, x.columns != 'id']
+    x = x.loc[:, x.columns != 'Unnamed: 0']
 
     y = data['price']
 
