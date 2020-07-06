@@ -17,7 +17,10 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import AdaBoostRegressor
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import AdaBoostRegressor
 # from sklearn.ensemble import RandomTreesEmbedding
 from sklearn.neural_network import MLPRegressor
 # from sklearn.linear_model import ElasticNet
@@ -26,16 +29,17 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 # from sklearn.preprocessing import LabelEncoder
 # from sklearn.preprocessing import Imputer
 from sklearn import metrics
+from sklearn import tree
 
 import statsmodels.api as sm
-from keras import optimizers
+from tensorflow.keras import optimizers
 from sklearn.linear_model import SGDRegressor
 # import statsmodels.api as sm
 
 
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.regularizers import l1
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.regularizers import l1
 
 import copy
 
@@ -67,24 +71,46 @@ def get_ensemble_models():
     return classifier_list, classifier_name_list
 
 
-def print_evaluation_metrics(trained_model, trained_model_name, X_test, y_test):
-    print('--------- For Model: ', trained_model_name, ' ---------\n')
+def print_evaluation_metrics(trained_model, trained_model_name, X_test, y_test, percent=True):
+    print('--------- For Model: ', trained_model_name, ' --------- (Test Data)\n')
     predicted_values = trained_model.predict(X_test)
+    # print(trained_model)
     print("Mean absolute error: ",
           metrics.mean_absolute_error(y_test, predicted_values))
-    print("Mean absolute percente error: ",
-          np.mean(np.abs((y_test - predicted_values) / y_test)) * 100)
+    print("PERCENT: ", percent)
+    if percent:
+        print("Mean absolute percent error: ",
+              np.mean(np.abs((y_test - predicted_values) / y_test)) * 100)
     print("Median absolute error: ",
           metrics.median_absolute_error(y_test, predicted_values))
     print("Mean squared error: ", metrics.mean_squared_error(
         y_test, predicted_values))
-    # dfscores = pd.DataFrame(y_test)
-    # dfcolumns = pd.DataFrame(predicted_values)
-    #
-    # featureScores = pd.concat([dfcolumns, dfscores], axis=1)
-    # featureScores.columns = ['Specs', 'Score']
-    # print(featureScores)
     print("R2: ", metrics.r2_score(y_test, predicted_values))
+    dfscores = pd.DataFrame(y_test)
+    dfcolumns = pd.DataFrame(predicted_values)
+
+    featureScores = pd.concat([dfcolumns, dfscores], axis=1)
+    featureScores.columns = ['Specs', 'Score']
+    featureScores.to_csv("../data/" + trained_model_name + ".csv")
+    saiso = []
+    for i in range(len(y_test)):
+        error = abs(y_test[i] - predicted_values[i])
+        if error > 15:
+            print(error, y_test[i], predicted_values[i])
+        saiso.append(error)
+
+    # print(featureScores)
+
+    # fig, ax = plt.subplots()
+    # data_x = saiso
+    # bins = 80
+    # if bins > 0:
+    #     ax.hist(data_x, bins)
+    #
+    # ax.set_xlabel("Saiso")
+    # ax.set_title(trained_model_name)
+    #
+    # plt.savefig("../data_visualization/" + trained_model_name + ".png")
 
 
 def print_evaluation_metrics2(trained_model, trained_model_name, X_test, y_test):
@@ -92,16 +118,25 @@ def print_evaluation_metrics2(trained_model, trained_model_name, X_test, y_test)
     predicted_values = trained_model.predict(X_test)
     print("Mean absolute error: ",
           metrics.mean_absolute_error(y_test, predicted_values))
+    # print("Mean absolute percente error: ",
+    #       np.mean(np.abs((y_test - predicted_values) / y_test)) * 100)
     print("Median absolute error: ",
           metrics.median_absolute_error(y_test, predicted_values))
     print("Mean squared error: ", metrics.mean_squared_error(
         y_test, predicted_values))
     print("R2: ", metrics.r2_score(y_test, predicted_values))
+    # dfscores = pd.DataFrame(y_test)
+    # dfcolumns = pd.DataFrame(predicted_values)
+    #
+    # featureScores = pd.concat([dfcolumns, dfscores], axis=1)
+    # featureScores.columns = ['Specs', 'Score']
+    # print(featureScores)
 
 
 def svm(X_train, y_train, X_val, y_val):
     model = SVR(gamma=0.05, verbose=True)  # was empty #0.1 #the - best gamma 0.05, c=0.5
     model.fit(X_train, y_train)
+    print(model)
     print_evaluation_metrics(model, "svm", X_val, y_val.values.ravel())
     print_evaluation_metrics2(model, "svm", X_train, y_train.values.ravel())
 
@@ -124,7 +159,7 @@ def LinearModelRidge(X_train, y_train, X_val, y_val):
     print('Variance score: %.2f' % r2_score(y_val, y_pred))
     print("R2:", sklearn.metrics.r2_score(y_val, y_pred))
 
-    print_evaluation_metrics(regr, "Linear Model Ridge", X_val, y_val)
+    print_evaluation_metrics(regr, "Linear Model Ridge", X_val, y_val, False)
     print_evaluation_metrics2(regr, "Linear Model Ridge", X_train, y_train)
     return
 
@@ -133,24 +168,23 @@ def LinearModelLasso(X_train, y_train, X_val, y_val):
     regr = Lasso(alpha=0.5)  # 0.5
     regr.fit(X_train, y_train)
 
-    print_evaluation_metrics(regr, "Linear Model Lasso", X_val, y_val)
+    print_evaluation_metrics(regr, "Linear Model Lasso", X_val, y_val, False)
     print_evaluation_metrics2(regr, "Linear Model Lasso", X_train, y_train)
     return
 
 
-#
-# def simple_neural_network(X_train, y_train, X_val, y_val):
-#     model = Sequential()
-#     model.add(Dense(units=20, activation='relu', input_dim=len(X_train.values[0])))
-#     model.add(Dense(units=5, activation='relu'))
-#     model.add(Dense(units=1, activation='linear'))
-#     adam = optimizers.Adam(lr=LEARNING_RATE, beta_1=0.9, beta_2=0.999, epsilon=None, decay=DECAY_RATE, amsgrad=False)
-#     model.compile(loss='mean_squared_error', optimizer=adam)
-#     model.fit(X_train, y_train, epochs=NUM_ITERATIONS, batch_size=BATCH_SIZE)
-#     print("finished fitting")
-#     print_evaluation_metrics(model, "NN", X_val, y_val)
-#     print_evaluation_metrics2(model, "NN", X_train, y_train)
-#     return
+def simple_neural_network(X_train, y_train, X_val, y_val):
+    model = Sequential()
+    model.add(Dense(units=20, activation='relu', input_dim=len(X_train.values[0])))
+    model.add(Dense(units=5, activation='relu'))
+    model.add(Dense(units=1, activation='linear'))
+    adam = optimizers.Adam(lr=LEARNING_RATE, beta_1=0.9, beta_2=0.999, epsilon=None, decay=DECAY_RATE, amsgrad=False)
+    model.compile(loss='mean_squared_error', optimizer=adam)
+    model.fit(X_train, y_train, epochs=NUM_ITERATIONS, batch_size=BATCH_SIZE)
+    print("finished fitting")
+    print_evaluation_metrics(model, "NN", X_val, y_val)
+    print_evaluation_metrics2(model, "NN", X_train, y_train)
+    return
 
 
 def TreebasedModel(X_train, y_train, X_val, y_val):
@@ -161,16 +195,49 @@ def TreebasedModel(X_train, y_train, X_val, y_val):
     y_train = np.squeeze(y_train)
     y_val = np.squeeze(y_val)
 
-    classifier_list, classifier_name_list = get_ensemble_models()
+    classifier_list = [
+        DecisionTreeRegressor(criterion='mse', splitter='best', max_depth=None, min_samples_split=2,
+                              min_samples_leaf=1, min_weight_fraction_leaf=0, max_features=None,
+                              random_state=500, max_leaf_nodes=None, min_impurity_decrease=0.0,
+                              min_impurity_split=None, presort='auto'),
+        GradientBoostingRegressor(alpha=0.9, criterion='friedman_mse', init=None,
+                                  learning_rate=0.12, loss='lad', max_depth=None,
+                                  max_features=None, max_leaf_nodes=None,
+                                  min_impurity_decrease=0.0, min_impurity_split=None,
+                                  min_samples_leaf=2, min_samples_split=2,
+                                  min_weight_fraction_leaf=0.004, n_estimators=20,
+                                  n_iter_no_change=None, presort='auto',
+                                  random_state=50, subsample=1.0, tol=0.0001,
+                                  validation_fraction=0.1, verbose=0, warm_start=False),
+        RandomForestRegressor(n_estimators=100, criterion='mse', max_depth=None, min_samples_split=2,
+                              min_samples_leaf=1, min_weight_fraction_leaf=0.004, max_features='auto',
+                              max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None,
+                              bootstrap=True,
+                              oob_score=False, n_jobs=None, random_state=None, verbose=0, warm_start=False,
+                              )
+    ]
+
+    classifier_name_list = [
+        'Decision-Tree',
+        'Gradient-Boost',
+        'Random-Forest'
+    ]
+    # print(classifier_list)
+
     for classifier, classifier_name in zip(classifier_list, classifier_name_list):
         classifier.fit(X_train, y_train)
         print_evaluation_metrics(classifier, classifier_name, X_val, y_val)
         print_evaluation_metrics2(classifier, classifier_name, X_train, y_train)
+        # fn = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
+        # cn = ['setosa', 'versicolor', 'virginica']
+        # fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(4, 4), dpi=900)
+        # tree.plot_tree(classifier)
+        # fig.savefig(classifier_name + '.png')
     return
 
 
 def kmeans(X_train, y_train, X_val, y_val):
-    n_clusters = 8
+    n_clusters = 4
     kmeans = KMeans(n_clusters=n_clusters, random_state=0, verbose=0, n_jobs=int(0.8 * n_cores)).fit(X_train)
     c_train = kmeans.predict(X_train)
     c_pred = kmeans.predict(X_val)
@@ -213,6 +280,8 @@ def kmeans(X_train, y_train, X_val, y_val):
         print('--------Finished analyzing cluster %d--------' % i)
     print("Mean absolute error: ",
           metrics.mean_absolute_error(y_val_stats, predicted_values))
+    # print("Mean absolute percente error: ",
+    #       np.mean(np.abs((y_val_stats - predicted_values) / y_val_stats)) * 100)
     print("Median absolute error: ",
           metrics.median_absolute_error(y_val_stats, predicted_values))
     print("Mean squared error: ", metrics.mean_squared_error(
@@ -221,6 +290,8 @@ def kmeans(X_train, y_train, X_val, y_val):
     print('------------TRAIN--------------------')
     print("Mean absolute error: ",
           metrics.mean_absolute_error(y_train_stats, labels_stats))
+    # print("Mean absolute percente error: ",
+    #       np.mean(np.abs((y_val_stats - predicted_values) / y_val_stats)) * 100)
     print("Median absolute error: ",
           metrics.median_absolute_error(y_train_stats, labels_stats))
     print("Mean squared error: ", metrics.mean_squared_error(
@@ -239,18 +310,19 @@ def linear_model_SGD(X_train, y_train, X_val, y_val):
 
 if __name__ == "__main__":
 
-    X_train = pd.read_csv('../data/data_cleaned_train_X.csv')
-    y_train = pd.read_csv('../data/data_cleaned_train_y.csv')
+    X_train = pd.read_csv('../data/train_X.csv')
+    y_train = pd.read_csv('../data/train_y.csv')
 
-    X_val = pd.read_csv('../data/data_cleaned_val_X.csv')
-    y_val = pd.read_csv('../data/data_cleaned_val_y.csv')
+    # X_val = pd.read_csv('../data/val_X.csv')
+    # y_val = pd.read_csv('../data/val_y.csv')
 
-    X_test = pd.read_csv('../data/data_cleaned_test_X.csv')
-    y_test = pd.read_csv('../data/data_cleaned_test_y.csv')
+    X_test = pd.read_csv('../data/test_X.csv')
+    y_test = pd.read_csv('../data/test_y.csv')
 
     # coeffs = np.load('../Data/selected_coefs_pvals.npy')
     coeffs = np.load('../data/selected_feature.npy')
     col_set = set()
+
     # cherry_picked_list = [
     #     'host_identity_verified',
     #     'latitude',
@@ -276,31 +348,39 @@ if __name__ == "__main__":
     for i in range(len(coeffs)):
         if (coeffs[i]):
             col_set.add(X_train.columns[i])
+    col_set.remove('Unnamed: 0.1')
+    # print(list(col_set))
     X_train = X_train[list(col_set)]
-    X_val = X_val[list(col_set)]
+    for i in range(len(list(col_set))):
+        print(i, X_train.columns[i])
+    # X_val = X_val[list(col_set)]
     X_test = X_test[list(col_set)]
+    # print(X_train.columns)
+    # print(X_train.columns[45])
+    # print(X_train.columns[46])
+    # print(X_train.columns[29])
 
-    X_concat = pd.concat([X_train, X_val], ignore_index=True)
-    y_concat = pd.concat([y_train, y_val], ignore_index=True)
+    # X_concat = pd.concat([X_train, X_val], ignore_index=True)
+    # y_concat = pd.concat([y_train, y_val], ignore_index=True)
 
     # RUN WITHOUT FEATURE SELECTION FOR THE BASELINE
     # """
     # print("--------------------Linear Regression--------------------")
-    # LinearModel(X_concat, y_concat, X_test, y_test)
+    # LinearModel(X_train, y_train, X_test, y_test)
     # """
-    #
-    # print("--------------------Tree-based Model--------------------")
-    # TreebasedModel(X_concat, y_concat, X_test, y_test)
-    # print("--------------------KMeans Clustering--------------------")
-    # c_pred, centroids = kmeans(X_concat, y_concat, X_test, y_test)
-    #
-    # print("--------------------------------------------------")
-    # LinearModelRidge(X_concat, y_concat, X_test, y_test)
-    # print("--------------------------------------------------")
-    #
-    # print("--------------------------------------------------")
-    # LinearModelLasso(X_train, y_train, X_val, y_val)
-    # print("--------------------------------------------------")
-    # simple_neural_network(X_concat, y_concat, X_test, y_test)
 
-    svm(X_concat, y_concat, X_test, y_test)
+    # print("--------------------Tree-based Model--------------------")
+    # TreebasedModel(X_train, y_train, X_test, y_test)
+    print("--------------------KMeans Clustering--------------------")
+    c_pred, centroids = kmeans(X_train, y_train, X_test, y_test)
+
+    # print("--------------------------------------------------")
+    # LinearModelRidge(X_train, y_train, X_test, y_test)
+    # print("--------------------------------------------------")
+    #
+    # print("--------------------------------------------------")
+    # LinearModelLasso(X_train, y_train, X_test, y_test)
+    # print("--------------------------------------------------")
+    # simple_neural_network(X_train, y_train, X_test, y_test)
+
+    # svm(X_train, y_train, X_test, y_test)

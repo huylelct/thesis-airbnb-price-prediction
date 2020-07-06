@@ -1,38 +1,42 @@
 import pandas as pd
 import numpy as np
+import operator
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_regression
+from sklearn.feature_selection import f_classif
+from sklearn.feature_selection import chi2
 import seaborn as sns
 
-data_x = pd.read_csv("../data/data_cleaned_train_X.csv")
-data_y = pd.read_csv("../data/data_cleaned_train_y.csv")
+data_numeric = pd.read_csv("../data/data_numeric.csv")
+data = pd.read_csv("../data/data-category.csv")
 
-top = 34
-bestfeatures = SelectKBest(score_func=f_regression, k=top)
-fit = bestfeatures.fit(data_x, data_y)
-dfscores = pd.DataFrame(fit.scores_)
-dfcolumns = pd.DataFrame(data_x.columns)
-
-featureScores = pd.concat([dfcolumns, dfscores], axis=1)
-featureScores.columns = ['Specs', 'Score']
-featureScores = featureScores.sort_values('Score', ascending=False)
-print(featureScores)
-np.save('../data/selected_feature.npy', [
-    'bathrooms',
-    'bedrooms',
-    'accommodates',
-    'beds',
-    'review_scores_rating',
-    'host_response_rate',
-    'room_type',
-    'host_response_time',
-    'reviews_per_month',
-    'latitude',
-    'longitude',
-    'number_of_reviews',
-    'calculated_host_listings_count_private_rooms',
-    'instant_bookable'
+top = 30
+data_y = data["price"]
+data_x = data.drop(columns=[
+    "price",
+    "Unnamed: 0",
+    "Unnamed: 0.1",
+    "Unnamed: 0.1.1",
 ])
+# print(data_x.columns)
+bestfeatures = SelectKBest(score_func=f_classif, k=top)
+fit = bestfeatures.fit(data_x, data_y)
+
+data_select = {}
+for i in range(len(data_x.columns.tolist())):
+    data_select[data_x.columns.tolist()[i]] = fit.scores_[i]
+
+sorted_x = sorted(data_select.items(), key=operator.itemgetter(1), reverse=True)
+
+feature_with_score = sorted_x[0:top]
+for item in feature_with_score:
+    print(item)
+
+top_feature = list(map(lambda x: x[0], feature_with_score))
+top_feature = top_feature + list(data_numeric.columns)
+print(top_feature)
+
+np.save('../data/selected_feature.npy', top_feature)
 
 # print(featureScores.sort_values('Score'))
 
