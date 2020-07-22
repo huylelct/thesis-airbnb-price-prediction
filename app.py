@@ -11,7 +11,9 @@ from sklearn.linear_model import LogisticRegression
 app = Flask(__name__)
 api = Api(app)
 CORS(app, support_credentials=True)
-
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
 @app.route("/login")
 @cross_origin(supports_credentials=True)
 def login():
