@@ -1,6 +1,5 @@
 from flask import Flask, request, json
 from flask_restful import Resource, Api
-from sqlalchemy import create_engine
 from json import dumps
 from flask_cors import CORS, cross_origin
 from flask import jsonify
@@ -9,7 +8,6 @@ import numpy as np
 import pandas as pd
 from sklearn import model_selection
 from sklearn.linear_model import LogisticRegression
-db_connect = create_engine('sqlite:///chinook.db')
 app = Flask(__name__)
 api = Api(app)
 CORS(app, support_credentials=True)
