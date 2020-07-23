@@ -1,7 +1,7 @@
 @import '~antd/dist/antd.css';
 
 .main {
-  width: 1200px;
+  width: 1400px;
   margin: auto;
   padding-top: 40px;
   text-align: center;
@@ -9,7 +9,13 @@
   height: 748px;
   font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
 }
-
+.tag{
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+.ant-input-number{
+  width: 100%;
+}
 .title {
   font-size: 30;
   color: red;

@@ -1,14 +1,14 @@
-import { Form, InputNumber, Button, Row, Col, Select, Card } from 'antd';
+import { Form, InputNumber, Button, Row, Col, Select, Card, Tag } from 'antd';
 import React, { useState } from 'react';
 import './App.scss';
 import axios from "axios";
 
 const layout = {
   labelCol: {
-    span: 12,
+    span: 14,
   },
   wrapperCol: {
-    span: 12,
+    span: 10,
   },
 };
 const { Option } = Select;
@@ -16,6 +16,9 @@ const tailLayout = {
   wrapperCol: { offset: 5, span: 14 },
 };
 var children: any = [];
+var children2: any = [];
+var children3: any = [];
+
 children.push(<Option value="amentity_wifi">Wifi</Option>);
 children.push(<Option value="amentity_dryer">Dryer</Option>);
 children.push(<Option value="amentity_essentials">Essentials</Option>);
@@ -24,8 +27,8 @@ children.push(<Option value="amentity_hair_dryer">Har dryer</Option>);
 children.push(<Option value="amentity_washer">Washer</Option>);
 children.push(<Option value={"amentity_iron"}>Iron</Option>);
 children.push(<Option value={"amentity_air_conditioning"}>Air conditioning</Option>);
-children.push(<Option value={"is_host_verified"}>Host verified</Option>);
-children.push(<Option value={"is_superhost"}>Superhost</Option>);
+children3.push(<Option value={"is_host_verified"}>Host verified</Option>);
+children3.push(<Option value={"is_superhost"}>Superhost</Option>);
 children.push(<Option value={"no_pets"}>No pets</Option>);
 children.push(<Option value={"can_parties"}>Can parties</Option>);
 children.push(<Option value={"can_smoking"}>Can smoking</Option>);
@@ -55,12 +58,21 @@ children.push(<Option value={"amentity_high_chair"}>High chair</Option>);
 children.push(<Option value={"amentity_bathtub"}>Bathtub</Option>);
 children.push(<Option value={"amentity_private_living_room"}>Private living room</Option>);
 children.push(<Option value={"amentity_lock_on_bedroom_door"}>Lock on bedroom door</Option>);
-children.push(<Option value={"is_private_room"}>Private room</Option>);
-children.push(<Option value={"is_hotel_room"}>Hotel room</Option>);
-children.push(<Option value={"is_entire_home"}>Entire home</Option>);
+children2.push(<Option value={"is_private_room"}>Private room</Option>);
+children2.push(<Option value={"is_hotel_room"}>Hotel room</Option>);
+children2.push(<Option value={"is_entire_home"}>Entire home</Option>);
 
-children.push(<Option value={"is_shared_room"}>Shared room</Option>);
+children2.push(<Option value={"is_shared_room"}>Shared room</Option>);
 var children1: any = [];
+var children4: any = [];
+children4.push(<Option value={1}>Within an hour</Option>);
+children4.push(<Option value={2}>Within a few hours</Option>);
+children4.push(<Option value={3}>Within a day</Option>);
+children4.push(<Option value={4}>A few days or more</Option>);
+
+
+
+
 children1.push(<Option value="is_dong_nai">Dong Nai</Option>);
 children1.push(<Option value="is_binh_duong">Binh Duong</Option>);
 children1.push(<Option value="is_ngoai_tinh">Out city</Option>);
@@ -178,8 +190,45 @@ const Demo = () => {
       values.option = undefined;
 
     }
+    if (values.roomtype != undefined) {
+      values[values.roomtype] = 1;
+      console.log(values[values.roomtype])
+      values.roomtype = undefined;
+    }
+    if (values.hostinfor != undefined) {
+      values.hostinfor.forEach((x: any) => values[x] = 1);
+
+      console.log(values[values.hostinfor])
+      values.hostinfor = undefined;
+    }
+    console.log('Success:', values);
+    if (values.option != undefined) {
+      values.option.forEach((x: any) => values[x] = 1);
+      values.option = undefined;
+
+    }
     for (var name in values) {
       if (values[name] == null) values[name] = undefined
+    }
+    for (var name in values) {
+      if (values[name] == undefined && name  == 'score') values[name]=4.7; 
+      if (values[name] == undefined && name  == 'score_cleanliness') values[name]=values.score; 
+      if (values[name] == undefined && name  == 'score_accuracy') values[name]=values.score; 
+      if (values[name] == undefined && name  == 'score_location') values[name]=values.score; 
+      if (values[name] == undefined && name  == 'score_check_in') values[name]=values.score; 
+      if (values[name] == undefined && name  == 'score_communication') values[name]=values.score; 
+      if (values[name] == undefined && name  == 'score_value') values[name]=values.score; 
+      if (values[name] == undefined && name  == 'reviews') values[name]=25; 
+      if (values[name] == undefined && name  == 'host_reviews') values[name]=100; 
+      if (values[name] == undefined && name  == 'host_response_rate') values[name]=70; 
+      if (values[name] == undefined && name  == 'host_response_time') values[name]=1; 
+      if (values[name] == undefined && name  == 'guest') values[name]=3.5; 
+      if (values[name] == undefined && name  == 'bedroom') values[name]=1.5; 
+      if (values[name] == undefined && name  == 'bed') values[name]=2.5; 
+      if (values[name] == undefined && name  == 'bath') values[name]=1.5; 
+      if (values[name] == undefined && name  == 'service_fee') values[name]=6; 
+      if (values[name] == undefined && name  == 'cleaning_fee') values[name]=4; 
+
     }
     const data = {
       data: values
@@ -207,15 +256,11 @@ const Demo = () => {
         onFinishFailed={onFinishFailed}
       >
         <Row>
-          <Col span={6}>
-            <Form.Item
-              label="Score"
-              name="score"
-            //rules={[{ required: true, message: 'Please input this field' }]}
-            >
-              <InputNumber defaultValue={0} />
-            </Form.Item>
-          </Col>
+
+          <Tag className="tag" color="geekblue">Basic information</Tag>
+        </Row>
+
+        <Row>
           <Col span={6}>
             <Form.Item
               label="Reviews"
@@ -243,7 +288,6 @@ const Demo = () => {
               <InputNumber defaultValue={0} />
             </Form.Item>
           </Col>
-        </Row><Row>
           <Col span={6}>
             <Form.Item
               label="Number beds"
@@ -262,7 +306,54 @@ const Demo = () => {
               <InputNumber defaultValue={0} />
             </Form.Item>
           </Col>
+          <Col span={6}>
+            <Form.Item
+              label="Service fee"
+              name="service_fee"
+            ////rules={[{ required: true, message: 'Please input this field' }]}
+            >
+              <InputNumber defaultValue={0} />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              label="Cleaning fee"
+              name="cleaning_fee"
+            ////rules={[{ required: true, message: 'Please input this field' }]}
+            >
+              <InputNumber defaultValue={0} />
+            </Form.Item>
 
+          </Col>
+          <Col span={6}>
+
+            <Form.Item
+              label="Room type"
+              name="roomtype"
+            >
+              <Select
+                style={{ width: '100%' }}
+              >
+                {children2}
+              </Select>
+            </Form.Item>
+          </Col>
+
+        </Row>
+
+        <Row>
+          <Tag className="tag" color="geekblue">Score</Tag>
+        </Row>
+        <Row>
+          <Col span={6}>
+            <Form.Item
+              label="Score"
+              name="score"
+            //rules={[{ required: true, message: 'Please input this field' }]}
+            >
+              <InputNumber defaultValue={0} />
+            </Form.Item>
+          </Col>
           <Col span={6}>
             <Form.Item
               label="Score cleanliness"
@@ -320,27 +411,13 @@ const Demo = () => {
               <InputNumber defaultValue={0} />
             </Form.Item>
           </Col>
-        </Row><Row>
+        </Row>
 
+        <Row>
+          <Tag className="tag" color="geekblue">Host information</Tag>
+        </Row>
+        <Row>
 
-          <Col span={6}>
-            <Form.Item
-              label="Service fee"
-              name="service_fee"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
-            >
-              <InputNumber defaultValue={0} />
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <Form.Item
-              label="Cleaning fee"
-              name="cleaning_fee"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
-            >
-              <InputNumber defaultValue={0} />
-            </Form.Item>
-          </Col>
           <Col span={6}>
             <Form.Item
               label="Host reviews"
@@ -370,9 +447,28 @@ const Demo = () => {
               name="host_response_time"
             ////rules={[{ required: true, message: 'Please input this field' }]}
             >
-              <InputNumber defaultValue={0} />
+              <Select
+                style={{ width: '100%' }}
+              >
+                {children4}
+              </Select>
             </Form.Item>
           </Col>
+          <Col span={6}>
+
+            <Form.Item
+              label="Host information"
+              name="hostinfor"
+            >
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+              >
+                {children3}
+              </Select>
+            </Form.Item>
+          </Col>
+
           {/* <Col span={6}>
             <Form.Item  
               label="Number share bath"
@@ -392,10 +488,16 @@ const Demo = () => {
               <InputNumber defaultValue={0} />
             </Form.Item>
           </Col>*/}
-        </Row><Row>
+        </Row>
+        <Row>
+
+          <Tag className="tag" color="geekblue">Other information</Tag>
+        </Row>
+        <Row>
+
           <Col span={12}>
             <Form.Item
-              label="Option"
+              label="Amenity"
               name="option"
             >
               <Select
@@ -417,6 +519,8 @@ const Demo = () => {
                 {children1}
               </Select>
             </Form.Item>
+
+
           </Col>
         </Row>
         <Form.Item  {...tailLayout}>
@@ -425,9 +529,11 @@ const Demo = () => {
         </Button>
         </Form.Item>
       </Form>
-      {price !== 0 && <Card >
-        Price: <span className="red">{price} $</span>
-      </Card>}
+      {
+        price !== 0 && <Card >
+          Price: <span className="red">{price} $</span>
+        </Card>
+      }
     </div >
   );
 };
