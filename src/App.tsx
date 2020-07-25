@@ -11,13 +11,18 @@ const layout = {
     span: 10,
   },
 };
+
 const { Option } = Select;
 const tailLayout = {
   wrapperCol: { offset: 5, span: 14 },
 };
+
 var children: any = [];
+var children1: any = [];
+
 var children2: any = [];
 var children3: any = [];
+var children4: any = [];
 
 children.push(<Option value="amentity_wifi">Wifi</Option>);
 children.push(<Option value="amentity_dryer">Dryer</Option>);
@@ -27,8 +32,6 @@ children.push(<Option value="amentity_hair_dryer">Har dryer</Option>);
 children.push(<Option value="amentity_washer">Washer</Option>);
 children.push(<Option value={"amentity_iron"}>Iron</Option>);
 children.push(<Option value={"amentity_air_conditioning"}>Air conditioning</Option>);
-children3.push(<Option value={"is_host_verified"}>Host verified</Option>);
-children3.push(<Option value={"is_superhost"}>Superhost</Option>);
 children.push(<Option value={"no_pets"}>No pets</Option>);
 children.push(<Option value={"can_parties"}>Can parties</Option>);
 children.push(<Option value={"can_smoking"}>Can smoking</Option>);
@@ -58,20 +61,19 @@ children.push(<Option value={"amentity_high_chair"}>High chair</Option>);
 children.push(<Option value={"amentity_bathtub"}>Bathtub</Option>);
 children.push(<Option value={"amentity_private_living_room"}>Private living room</Option>);
 children.push(<Option value={"amentity_lock_on_bedroom_door"}>Lock on bedroom door</Option>);
+
 children2.push(<Option value={"is_private_room"}>Private room</Option>);
 children2.push(<Option value={"is_hotel_room"}>Hotel room</Option>);
 children2.push(<Option value={"is_entire_home"}>Entire home</Option>);
-
 children2.push(<Option value={"is_shared_room"}>Shared room</Option>);
-var children1: any = [];
-var children4: any = [];
+
+children3.push(<Option value={"is_host_verified"}>Host verified</Option>);
+children3.push(<Option value={"is_superhost"}>Superhost</Option>);
+
 children4.push(<Option value={1}>Within an hour</Option>);
 children4.push(<Option value={2}>Within a few hours</Option>);
 children4.push(<Option value={3}>Within a day</Option>);
 children4.push(<Option value={4}>A few days or more</Option>);
-
-
-
 
 children1.push(<Option value="is_dong_nai">Dong Nai</Option>);
 children1.push(<Option value="is_binh_duong">Binh Duong</Option>);
@@ -102,143 +104,70 @@ children1.push(<Option value="is_thu_duc">Thu Duc</Option>);
 children1.push(<Option value="is_binh_thanh">Binh Thanh</Option>);
 
 
-
 const Demo = () => {
   const [price, setPrice] = useState(0);
-
   const onFinish = (values: any) => {
-
-    // values.amentity_wifi = 0;
-    // values.amentity_dryer = 0;
-    // values.amentity_essentials = 0;
-    // values.amentity_hangers = 0;
-    // values.amentity_hair_dryer = 0;
-    // values.amentity_washer = 0;
-    // values.amentity_iron = 0;
-    // values.amentity_air_conditioning = 0;
-    // values.is_host_verified = 0;
-    // values.is_superhost = 0;
-    // values.no_pets = 0;
-    // values.can_parties = 0;
-    // values.can_smoking = 0;
-    // values.amentity_elevator = 0;
-    // values.amentity_kitchen = 0;
-    // values.amentity_cable_tv = 0;
-    // values.amentity_tv = 0;
-    // values.amentity_laptop_friendly_workspace = 0;
-    // values.amentity_first_aid_kit = 0;
-    // values.amentity_indoor_fireplace = 0;
-    // values.amentity_heating = 0;
-    // values.amentity_carbon_monoxide_alarm = 0;
-    // values.amentity_free_parking_on_premises = 0;
-    // values.amentity_paid_parking_off_premises = 0;
-
-    // values.amentity_breakfast = 0;
-    // values.amentity_fire_extinguisher = 0;
-    // values.amentity_hot_tub = 0;
-    // values.amentity_gym = 0;
-    // values.amentity_pool = 0;
-    // values.amentity_smoke_alarm = 0;
-    // values.amentity_free_street_parking = 0;
-    // values.amentity_private_entrance = 0;
-    // values.amentity_room_darkening_shades = 0;
-    // values.amentity_building_staff = 0;
-    // values.amentity_high_chair = 0;
-    // values.amentity_bathtub = 0;
-    // values.amentity_private_living_room = 0;
-    // values.amentity_lock_on_bedroom_door = 0;
-    // values.is_entire_home = 0;
-    // values.is_shared_room = 0;
-    // values.is_private_room = 0;
-    // values.is_hotel_room = 0;
-    // values.is_dong_nai = 0;
-    // values.is_binh_duong = 0;
-    // values.is_ngoai_tinh = 0;
-    // values.is_phu_nhuan = 0;
-    // values.is_tan_phu = 0;
-    // values.is_binh_tan = 0;
-    // values.is_quan_4 = 0;
-    // values.is_can_gio = 0;
-    // values.is_nha_be = 0;
-    // values.is_quan_5 = 0;
-    // values.is_go_vap = 0;
-    // values.is_binh_chanh = 0;
-    // values.is_quan_12 = 0;
-    // values.is_tan_binh = 0;
-    // values.is_quan_3 = 0;
-    // values.is_quan_7 = 0;
-    // values.is_hoc_mon = 0;
-    // values.is_quan_9 = 0;
-    // values.is_quan_6 = 0;
-    // values.is_quan_2 = 0;
-    // values.is_quan_8 = 0;
-    // values.is_quan_10 = 0;
-    // values.is_quan_1 = 0;
-    // values.is_quan_11 = 0;
-    // values.is_cu_chi = 0;
-    // values.is_thu_duc = 0;
-    // values.is_binh_thanh = 0;
 
     if (values.location != undefined) {
       values[values.location] = 1;
-      console.log(values[values.location])
       values.location = undefined;
     }
-    console.log('Success:', values);
+
     if (values.option != undefined) {
       values.option.forEach((x: any) => values[x] = 1);
       values.option = undefined;
-
     }
+
     if (values.roomtype != undefined) {
       values[values.roomtype] = 1;
-      console.log(values[values.roomtype])
       values.roomtype = undefined;
     }
+
     if (values.hostinfor != undefined) {
       values.hostinfor.forEach((x: any) => values[x] = 1);
-
-      console.log(values[values.hostinfor])
       values.hostinfor = undefined;
     }
-    console.log('Success:', values);
+
     if (values.option != undefined) {
       values.option.forEach((x: any) => values[x] = 1);
       values.option = undefined;
-
     }
+
     for (var name in values) {
       if (values[name] == null) values[name] = undefined
     }
-    for (var name in values) {
-      if (values[name] == undefined && name  == 'score') values[name]=4.7; 
-      if (values[name] == undefined && name  == 'score_cleanliness') values[name]=values.score; 
-      if (values[name] == undefined && name  == 'score_accuracy') values[name]=values.score; 
-      if (values[name] == undefined && name  == 'score_location') values[name]=values.score; 
-      if (values[name] == undefined && name  == 'score_check_in') values[name]=values.score; 
-      if (values[name] == undefined && name  == 'score_communication') values[name]=values.score; 
-      if (values[name] == undefined && name  == 'score_value') values[name]=values.score; 
-      if (values[name] == undefined && name  == 'reviews') values[name]=25; 
-      if (values[name] == undefined && name  == 'host_reviews') values[name]=100; 
-      if (values[name] == undefined && name  == 'host_response_rate') values[name]=70; 
-      if (values[name] == undefined && name  == 'host_response_time') values[name]=1; 
-      if (values[name] == undefined && name  == 'guest') values[name]=3.5; 
-      if (values[name] == undefined && name  == 'bedroom') values[name]=1.5; 
-      if (values[name] == undefined && name  == 'bed') values[name]=2.5; 
-      if (values[name] == undefined && name  == 'bath') values[name]=1.5; 
-      if (values[name] == undefined && name  == 'service_fee') values[name]=6; 
-      if (values[name] == undefined && name  == 'cleaning_fee') values[name]=4; 
 
+    for (var name in values) {
+      if (values[name] == undefined && name == 'score') values[name] = 4.7;
+      if (values[name] == undefined && name == 'score_cleanliness') values[name] = values.score;
+      if (values[name] == undefined && name == 'score_accuracy') values[name] = values.score;
+      if (values[name] == undefined && name == 'score_location') values[name] = values.score;
+      if (values[name] == undefined && name == 'score_check_in') values[name] = values.score;
+      if (values[name] == undefined && name == 'score_communication') values[name] = values.score;
+      if (values[name] == undefined && name == 'score_value') values[name] = values.score;
+      if (values[name] == undefined && name == 'reviews') values[name] = 25;
+      if (values[name] == undefined && name == 'host_reviews') values[name] = 100;
+      if (values[name] == undefined && name == 'host_response_rate') values[name] = 70;
+      if (values[name] == undefined && name == 'host_response_time') values[name] = 1;
+      if (values[name] == undefined && name == 'guest') values[name] = 3.5;
+      if (values[name] == undefined && name == 'bedroom') values[name] = 1.5;
+      if (values[name] == undefined && name == 'bed') values[name] = 2.5;
+      if (values[name] == undefined && name == 'bath') values[name] = 1.5;
+      if (values[name] == undefined && name == 'service_fee') values[name] = 6;
+      if (values[name] == undefined && name == 'cleaning_fee') values[name] = 4;
     }
+
     const data = {
       data: values
     }
+
     axios.post('https://backend-price-predict.herokuapp.com/employees', data)
       .then(function (response) {
         console.log(response.data);
         setPrice(response.data)
       })
   };
+
   const [showResult, setshowResult] = useState(false);
 
   const onFinishFailed = (errorInfo: any) => {
@@ -247,7 +176,6 @@ const Demo = () => {
 
   return (
     <div className="main">
-
       <h1 className="title">{process.env.REACT_APP_API_URL}</h1>
       <Form {...layout}
         name="basic"
@@ -256,16 +184,13 @@ const Demo = () => {
         onFinishFailed={onFinishFailed}
       >
         <Row>
-
           <Tag className="tag" color="geekblue">Basic information</Tag>
         </Row>
-
         <Row>
           <Col span={6}>
             <Form.Item
               label="Reviews"
               name="reviews"
-            //rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -274,7 +199,6 @@ const Demo = () => {
             <Form.Item
               label="Number guests"
               name="guest"
-            //rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -283,7 +207,6 @@ const Demo = () => {
             <Form.Item
               label="Number bedrooms"
               name="bedroom"
-            //rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -292,7 +215,6 @@ const Demo = () => {
             <Form.Item
               label="Number beds"
               name="bed"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -301,7 +223,6 @@ const Demo = () => {
             <Form.Item
               label="Number baths"
               name="bath"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -310,7 +231,6 @@ const Demo = () => {
             <Form.Item
               label="Service fee"
               name="service_fee"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -319,14 +239,11 @@ const Demo = () => {
             <Form.Item
               label="Cleaning fee"
               name="cleaning_fee"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
-
           </Col>
           <Col span={6}>
-
             <Form.Item
               label="Room type"
               name="roomtype"
@@ -338,9 +255,7 @@ const Demo = () => {
               </Select>
             </Form.Item>
           </Col>
-
         </Row>
-
         <Row>
           <Tag className="tag" color="geekblue">Score</Tag>
         </Row>
@@ -349,7 +264,6 @@ const Demo = () => {
             <Form.Item
               label="Score"
               name="score"
-            //rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -358,7 +272,6 @@ const Demo = () => {
             <Form.Item
               label="Score cleanliness"
               name="score_cleanliness"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -367,7 +280,6 @@ const Demo = () => {
             <Form.Item
               label="Score accuracy"
               name="score_accuracy"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -376,7 +288,6 @@ const Demo = () => {
             <Form.Item
               label="Score communication"
               name="score_communication"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -385,7 +296,6 @@ const Demo = () => {
             <Form.Item
               label="Score location"
               name="score_location"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -394,25 +304,19 @@ const Demo = () => {
             <Form.Item
               label="Score value"
               name="score_value"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
           </Col>
-
-
-
           <Col span={6}>
             <Form.Item
               label="Score check in"
               name="score_check_in"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
           </Col>
         </Row>
-
         <Row>
           <Tag className="tag" color="geekblue">Host information</Tag>
         </Row>
@@ -422,7 +326,6 @@ const Demo = () => {
             <Form.Item
               label="Host reviews"
               name="host_reviews"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
@@ -431,21 +334,14 @@ const Demo = () => {
             <Form.Item
               label="Host reponse rate"
               name="host_response_rate"
-
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <InputNumber defaultValue={0} />
             </Form.Item>
           </Col>
-
-
-
-
           <Col span={6}>
             <Form.Item
               label="Host response time"
               name="host_response_time"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
             >
               <Select
                 style={{ width: '100%' }}
@@ -468,33 +364,11 @@ const Demo = () => {
               </Select>
             </Form.Item>
           </Col>
-
-          {/* <Col span={6}>
-            <Form.Item  
-              label="Number share bath"
-              name="shared_bath"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
-            >
-              <InputNumber defaultValue={0} />
-            </Form.Item>
-          </Col>
-
-          <Col span={6}>
-            <Form.Item  
-              label="Number private bath"
-              name="private_bath"
-            ////rules={[{ required: true, message: 'Please input this field' }]}
-            >
-              <InputNumber defaultValue={0} />
-            </Form.Item>
-          </Col>*/}
         </Row>
         <Row>
-
           <Tag className="tag" color="geekblue">Other information</Tag>
         </Row>
         <Row>
-
           <Col span={12}>
             <Form.Item
               label="Amenity"
@@ -519,8 +393,6 @@ const Demo = () => {
                 {children1}
               </Select>
             </Form.Item>
-
-
           </Col>
         </Row>
         <Form.Item  {...tailLayout}>
