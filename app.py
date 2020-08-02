@@ -28,25 +28,24 @@ class Employees(Resource):
   def post(self):
     a=request.json["data"]
  
-    field_list =[ 'score', 'reviews', 'guest', 'bedroom', 'bed', 'bath',
-       'amentity_wifi', 'amentity_dryer', 'amentity_essentials',
-       'amentity_hangers', 'amentity_hair_dryer', 'amentity_washer',
-       'amentity_iron', 'amentity_air_conditioning', 'score_cleanliness',    
-       'score_accuracy', 'score_communication', 'score_location',
-       'score_check_in', 'score_value', 'is_host_verified', 'is_superhost',
-       'no_pets', 'can_parties', 'can_smoking', 'service_fee',
-       'amentity_elevator', 'amentity_kitchen', 'amentity_cable_tv',
-       'amentity_tv', 'host_reviews', 'host_response_rate',
-       'host_response_time', 'amentity_laptop-friendly_workspace',
-       'amentity_first_aid_kit', 'amentity_indoor_fireplace',
-       'amentity_heating', 'amentity_carbon_monoxide_alarm',
-       'amentity_free_parking_on_premises', 'amentity_breakfast',
-       'amentity_hot_tub', 'cleaning_fee', 'amentity_fire_extinguisher',
+    field_list =['score', 'reviews', 'guest', 'bedroom', 'bed', 'bath', 'amentity_wifi',
+       'amentity_dryer', 'amentity_essentials', 'amentity_hangers',
+       'amentity_hair_dryer', 'amentity_washer', 'amentity_iron',
+       'amentity_air_conditioning', 'score_cleanliness', 'score_accuracy',
+       'score_communication', 'score_location', 'score_check_in',
+       'score_value', 'is_host_verified', 'is_superhost', 'no_pets',
+       'can_parties', 'can_smoking', 'amentity_elevator', 'amentity_kitchen',
+       'amentity_cable_tv', 'amentity_tv', 'host_reviews',
+       'host_response_rate', 'host_response_time',
+       'amentity_laptop-friendly_workspace', 'amentity_first_aid_kit',
+       'amentity_indoor_fireplace', 'amentity_heating',
+       'amentity_carbon_monoxide_alarm', 'amentity_free_parking_on_premises',
+       'amentity_breakfast', 'amentity_hot_tub', 'amentity_fire_extinguisher',
        'amentity_gym', 'amentity_pool', 'amentity_smoke_alarm',
        'amentity_free_street_parking', 'amentity_private_entrance',
        'amentity_room-darkening_shades', 'amentity_building_staff',
        'amentity_paid_parking_off_premises', 'amentity_high_chair',
-       'amentity_bathtub', 
+       'amentity_bathtub', 'shared_bath', 'private_bath',
        'amentity_private_living_room', 'amentity_lock_on_bedroom_door',
        'is_dong_nai', 'is_binh_duong', 'is_ngoai_tinh', 'is_phu_nhuan',
        'is_tan_phu', 'is_binh_tan', 'is_quan_4', 'is_can_gio', 'is_nha_be',
@@ -58,14 +57,26 @@ class Employees(Resource):
     b = np.full([1,86],0)   
 
     for x in a:
-      idx= field_list.index(x)
-      b[0][idx]=a[x]
-  
+      if x in field_list:
+        idx= field_list.index(x)
+        b[0][idx]=a[x]
+
+    filename = 'model_clean.sav'
+    loaded_model = joblib.load(filename)
+    result = loaded_model.predict(b)
+    print(result.ravel() )
+
+    cleaning_fee = result.ravel()[0]
+    b = np.append(b, [[cleaning_fee]], axis = 1)
+    filename = 'model_svc.sav'
+    loaded_model = joblib.load(filename)
+    result = loaded_model.predict(b)
+    print(result.ravel() )
+    service_fee = result.ravel()[0]
+    b = np.append(b, [[service_fee]], axis = 1)
+
     print(b)
-    # for i in food_list:
-    #   idx = a.indexOf(i)
-    #   b[index]
-    filename = 'finalized_model.sav'
+    filename = 'model_price.sav'
     loaded_model = joblib.load(filename)
     result = loaded_model.predict(b)
     print(result.ravel() )
